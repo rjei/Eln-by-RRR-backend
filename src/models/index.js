@@ -5,6 +5,8 @@ import Lesson from "./lesson.model.js";
 import Progress from "./progress.model.js";
 import GameScore from "./gameScore.model.js";
 import UserStats from "./userStats.model.js";
+import Enrollment from "./enrollment.model.js";
+import GameQuestion from "./gameQuestion.model.js";
 
 // Define associations
 // Course - Lesson (One to Many)
@@ -31,12 +33,34 @@ GameScore.belongsTo(User, { foreignKey: 'userId', as: 'User' });
 User.hasOne(UserStats, { foreignKey: 'userId', as: 'Stats' });
 UserStats.belongsTo(User, { foreignKey: 'userId', as: 'User' });
 
+// User - Course (Many to Many through Enrollment)
+User.belongsToMany(Course, {
+  through: Enrollment,
+  foreignKey: 'userId',
+  otherKey: 'courseId',
+  as: 'EnrolledCourses'
+});
+Course.belongsToMany(User, {
+  through: Enrollment,
+  foreignKey: 'courseId',
+  otherKey: 'userId',
+  as: 'EnrolledUsers'
+});
+
+// Direct associations for Enrollment (for easier querying with include)
+User.hasMany(Enrollment, { foreignKey: 'userId', as: 'Enrollments' });
+Enrollment.belongsTo(User, { foreignKey: 'userId', as: 'User' });
+
+Course.hasMany(Enrollment, { foreignKey: 'courseId', as: 'Enrollments' });
+Enrollment.belongsTo(Course, { foreignKey: 'courseId', as: 'Course' });
+
 export {
   User,
   Course,
   Lesson,
   Progress,
   GameScore,
-  UserStats
+  UserStats,
+  Enrollment,
+  GameQuestion
 };
-

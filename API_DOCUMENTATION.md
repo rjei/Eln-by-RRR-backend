@@ -164,6 +164,123 @@ Create a new course. **Requires authentication.**
 
 ---
 
+### Enrollment (`/api/courses`)
+
+#### POST `/api/courses/:courseId/enroll`
+Enroll user to a course. **Requires authentication.**
+
+**Response:**
+```json
+{
+  "status": 201,
+  "payload": {
+    "message": "Berhasil mendaftar ke kursus",
+    "enrollment": {
+      "id": 1,
+      "userId": 1,
+      "courseId": 1,
+      "status": "active",
+      "enrolledAt": "2024-12-18T10:00:00.000Z",
+      "Course": {
+        "id": 1,
+        "title": "English for Beginners",
+        "Lessons": [...]
+      }
+    }
+  }
+}
+```
+
+**Error (already enrolled):**
+```json
+{
+  "status": 400,
+  "payload": {
+    "error": "Anda sudah terdaftar di kursus ini",
+    "enrollment": {...}
+  }
+}
+```
+
+#### GET `/api/courses/my-learning`
+Get user's enrolled courses with calculated progress. **Requires authentication.**
+
+This is the main endpoint for the "My Learning" page. Returns all courses the user is enrolled in with **dynamically calculated progress percentages**.
+
+**Response:**
+```json
+{
+  "status": 200,
+  "payload": [
+    {
+      "enrollmentId": 1,
+      "enrolledAt": "2024-12-18T10:00:00.000Z",
+      "status": "active",
+      "completedAt": null,
+      "course": {
+        "id": 1,
+        "title": "English for Beginners",
+        "description": "...",
+        "level": "Beginner",
+        "duration": "8 minggu",
+        "category": "General",
+        "image": "...",
+        "students": 2450,
+        "rating": 4.8
+      },
+      "progressPercent": 25,
+      "completedLessons": 8,
+      "totalLessons": 32,
+      "lastLesson": {
+        "id": 8,
+        "title": "Practice: Self Introduction",
+        "order": 8
+      },
+      "nextLesson": {
+        "id": 9,
+        "title": "Grammar: Present Tense",
+        "order": 9
+      }
+    }
+  ]
+}
+```
+
+#### DELETE `/api/courses/:courseId/enroll`
+Unenroll user from a course. **Requires authentication.**
+
+**Response:**
+```json
+{
+  "status": 200,
+  "payload": {
+    "message": "Berhasil keluar dari kursus"
+  }
+}
+```
+
+#### GET `/api/courses/:courseId/enrollment-status`
+Check if user is enrolled in a specific course. **Requires authentication.**
+
+**Response:**
+```json
+{
+  "status": 200,
+  "payload": {
+    "isEnrolled": true,
+    "enrollment": {
+      "id": 1,
+      "userId": 1,
+      "courseId": 1,
+      "status": "active",
+      "enrolledAt": "2024-12-18T10:00:00.000Z"
+    }
+  }
+}
+```
+
+---
+
 ### Lessons (`/api/lessons`)
 
 #### GET `/api/lessons/course/:courseId`

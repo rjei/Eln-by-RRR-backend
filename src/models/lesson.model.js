@@ -22,30 +22,43 @@ const Lesson = sequelize.define("Lesson", {
   },
   content: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: true,
+    comment: 'Main lesson content/text'
   },
   order: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-
   videoUrl: {
     type: DataTypes.STRING,
-    allowNull: true 
+    allowNull: true
   },
   thumbnail: {
     type: DataTypes.STRING,
     allowNull: true
   },
- 
   duration: {
-    type: DataTypes.INTEGER, 
-    defaultValue: 0
+    type: DataTypes.STRING, // Changed to STRING to store "5 menit", "12 menit" etc.
+    allowNull: true,
+    defaultValue: "0 menit"
   },
   transcript: {
     type: DataTypes.JSONB,
     defaultValue: [],
-    allowNull: true
+    allowNull: true,
+    comment: 'Array of transcript segments with startTime, endTime, text, speaker'
+  },
+  // New column for structured lesson data (vocabulary & quiz)
+  data: {
+    type: DataTypes.JSONB,
+    allowNull: true,
+    defaultValue: {},
+    comment: 'Structured data containing vocabulary array and quiz object'
+    // Structure:
+    // {
+    //   vocabulary: [{ word: string, meaning: string, example: string }],
+    //   quiz: { question: string, options: string[], correctAnswer: number }
+    // }
   },
   createdAt: {
     type: DataTypes.DATE,
