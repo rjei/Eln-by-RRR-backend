@@ -15,13 +15,26 @@ import gameRoutes from "./routes/game.routes.js";
 
 const app = express();
 
-// Middleware
+// ================== PERBAIKAN CORS (WAJIB) ==================
+// Mengizinkan domain Vercel dan Localhost agar tidak kena blokir
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: "*", // Pakai "*" untuk mengizinkan semua domain saat demo
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   credentials: true
 }));
+
+// Tangani request OPTIONS (Preflight)
+app.options("*", cors());
+// ============================================================
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Halaman depan untuk memastikan backend hidup
+app.get("/", (req, res) => {
+  res.json({ message: "Backend English E-Learning is Running! 🚀" });
+});
 
 // Health check endpoint
 app.get("/api/health", (req, res) =>
