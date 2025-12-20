@@ -29,7 +29,7 @@ app.use(cors({
 /**
  * PERBAIKAN 2: Tangani preflight OPTIONS secara eksplisit.
  */
-app.options('*', cors());
+app.options('/{*splat}', cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
